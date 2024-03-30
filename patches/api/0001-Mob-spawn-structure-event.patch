@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Initial Source <auto@mated.null>
+Date: Fri, 29 Mar 2024 21:16:04 +0800
+Subject: [PATCH] Mob spawn structure event
+
+
+diff --git a/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java b/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..45ed0c9c830e4d842df6b60ce3e7097b4c2c2c71
+--- /dev/null
++++ b/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java
+@@ -0,0 +1,44 @@
++package today.qwq.pineapple.event;
++
++import io.papermc.paper.math.BlockPosition;
++import io.papermc.paper.math.Position;
++import org.bukkit.block.Biome;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++
++public class MobSpawnStructure extends Event {
++
++    private static HandlerList handlers = new HandlerList();
++
++    public Position getBlockPos() {
++        return blockPos;
++    }
++
++    private final Position blockPos;
++
++    public MobSpawnStructure(Position blockPos) {
++        this.blockPos = blockPos;
++    }
++
++    public String getStructure() {
++        return structure;
++    }
++
++    public void setStructure(String structure) {
++        this.structure = structure;
++    }
++
++    private String structure = null;
++
++
++    @Override
++    public @NotNull HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}

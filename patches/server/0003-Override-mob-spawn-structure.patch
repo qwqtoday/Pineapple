@@ -1,0 +1,82 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SushiLeader <lukas.leung@hotmail.com>
+Date: Sat, 30 Mar 2024 12:22:04 +0800
+Subject: [PATCH] Override mob spawn structure
+
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+index b8b78494449c0cd638f9706a803dc54e184d981f..d69951be04b0be178c75b0a74be1b8c8d36ceb3b 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+@@ -3,6 +3,8 @@ package net.minecraft.world.level.chunk;
+ import com.google.common.base.Suppliers;
+ import com.mojang.datafixers.util.Pair;
+ import com.mojang.serialization.Codec;
++import io.papermc.paper.math.BlockPosition;
++import io.papermc.paper.math.Position;
+ import it.unimi.dsi.fastutil.ints.IntArraySet;
+ import it.unimi.dsi.fastutil.longs.LongSet;
+ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+@@ -29,14 +31,7 @@ import net.minecraft.CrashReportCategory;
+ import net.minecraft.ReportedException;
+ import net.minecraft.SharedConstants;
+ import net.minecraft.Util;
+-import net.minecraft.core.BlockPos;
+-import net.minecraft.core.Holder;
+-import net.minecraft.core.HolderLookup;
+-import net.minecraft.core.HolderSet;
+-import net.minecraft.core.Registry;
+-import net.minecraft.core.RegistryAccess;
+-import net.minecraft.core.SectionPos;
+-import net.minecraft.core.Vec3i;
++import net.minecraft.core.*;
+ import net.minecraft.core.registries.BuiltInRegistries;
+ import net.minecraft.core.registries.Registries;
+ import net.minecraft.network.protocol.game.DebugPackets;
+@@ -74,8 +69,12 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
+ import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
+ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+ import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
++import net.minecraft.world.level.levelgen.structure.structures.NetherFortressStructure;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+ import org.apache.commons.lang3.mutable.MutableBoolean;
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.generator.structure.CraftStructure;
++import today.qwq.pineapple.event.MobSpawnStructure;
+ 
+ public abstract class ChunkGenerator {
+ 
+@@ -524,6 +523,33 @@ public abstract class ChunkGenerator {
+         Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
+         Iterator iterator = map.entrySet().iterator();
+ 
++        MobSpawnStructure event = new MobSpawnStructure(Position.block(pos.getX(), pos.getY(), pos.getZ()));
++        Bukkit.getServer().getPluginManager().callEvent(event);
++
++        String structureType = event.getStructure();
++        if (structureType != null) {
++            Structure structure = null;
++            if ("PILLAGER_OUTPOST".equals(structureType)) {
++                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.PILLAGER_OUTPOST);
++                }
++            if ("OCEAN_MONUMENT".equals(structureType)) {
++                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.MONUMENT);
++                }
++            if ("SWAMP_HUT".equals(structureType)) {
++                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.SWAMP_HUT);
++                }
++            if ("FORTRESS".equals(structureType)) {
++                    return NetherFortressStructure.FORTRESS_ENEMIES;
++                }
++            if (structure != null) {
++                    Map<MobCategory, StructureSpawnOverride> spawnOverrides = structure.spawnOverrides();
++                    StructureSpawnOverride structureSpawnOverride = spawnOverrides.get(group);
++                    if (structureSpawnOverride != null) {
++                            return structureSpawnOverride.spawns();
++                        }
++                }
++        }
++
+         while (iterator.hasNext()) {
+             Entry<Structure, LongSet> entry = (Entry) iterator.next();
+             Structure structure = (Structure) entry.getKey();
