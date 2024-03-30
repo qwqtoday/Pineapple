@@ -5,7 +5,7 @@ Subject: [PATCH] Override mob spawn structure
 
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index b8b78494449c0cd638f9706a803dc54e184d981f..d69951be04b0be178c75b0a74be1b8c8d36ceb3b 100644
+index b8b78494449c0cd638f9706a803dc54e184d981f..441b6cf0052077c117fc846dbd26b3bb61164d0d 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -3,6 +3,8 @@ package net.minecraft.world.level.chunk;
@@ -57,24 +57,24 @@ index b8b78494449c0cd638f9706a803dc54e184d981f..d69951be04b0be178c75b0a74be1b8c8
 +        if (structureType != null) {
 +            Structure structure = null;
 +            if ("PILLAGER_OUTPOST".equals(structureType)) {
-+                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.PILLAGER_OUTPOST);
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.PILLAGER_OUTPOST);
 +                }
 +            if ("OCEAN_MONUMENT".equals(structureType)) {
-+                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.MONUMENT);
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.MONUMENT);
 +                }
 +            if ("SWAMP_HUT".equals(structureType)) {
-+                    structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.SWAMP_HUT);
-+                }
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.SWAMP_HUT);
++            }
 +            if ("FORTRESS".equals(structureType)) {
-+                    return NetherFortressStructure.FORTRESS_ENEMIES;
-+                }
++                return NetherFortressStructure.FORTRESS_ENEMIES;
++            }
 +            if (structure != null) {
-+                    Map<MobCategory, StructureSpawnOverride> spawnOverrides = structure.spawnOverrides();
-+                    StructureSpawnOverride structureSpawnOverride = spawnOverrides.get(group);
-+                    if (structureSpawnOverride != null) {
-+                            return structureSpawnOverride.spawns();
-+                        }
++                Map<MobCategory, StructureSpawnOverride> spawnOverrides = structure.spawnOverrides();
++                StructureSpawnOverride structureSpawnOverride = spawnOverrides.get(group);
++                if (structureSpawnOverride != null) {
++                    return structureSpawnOverride.spawns();
 +                }
++            }
 +        }
 +
          while (iterator.hasNext()) {
