@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SushiLeader <lukas.leung@hotmail.com>
+Date: Sat, 30 Mar 2024 16:25:53 +0800
+Subject: [PATCH] relocate end portal
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 8ecabf2102269446ed7a71b0111844b203814e13..a410058540625bac76846ff78c475dd75c0ce758 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -3856,7 +3856,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+             BlockPos blockposition1;
+ 
+             if (flag1) {
+-                blockposition1 = ServerLevel.END_SPAWN_POINT;
++                int portalX = ((this.getBlockX() >> 10) * 1024) + 512;
++                int portalZ = ((this.getBlockZ() >> 10) * 1024) + 512;
++
++                blockposition1 = new BlockPos(portalX, 128, portalZ);
+             } else {
+                 destination.getChunkAt(destination.getSharedSpawnPos()); // Paper - Ensure spawn chunk is always loaded before calculating Y coordinate
+                 blockposition1 = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
