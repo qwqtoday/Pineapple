@@ -6,10 +6,10 @@ Subject: [PATCH] Mob spawn structure event
 
 diff --git a/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java b/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..45ed0c9c830e4d842df6b60ce3e7097b4c2c2c71
+index 0000000000000000000000000000000000000000..5dbec57b28102345552f6363f103482a8fa9f740
 --- /dev/null
 +++ b/src/main/java/today/qwq/pineapple/event/MobSpawnStructure.java
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,48 @@
 +package today.qwq.pineapple.event;
 +
 +import io.papermc.paper.math.BlockPosition;
@@ -18,29 +18,33 @@ index 0000000000000000000000000000000000000000..45ed0c9c830e4d842df6b60ce3e7097b
 +import org.bukkit.event.Event;
 +import org.bukkit.event.HandlerList;
 +import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public class MobSpawnStructure extends Event {
 +
 +    private static HandlerList handlers = new HandlerList();
 +
-+    public Position getBlockPos() {
++    public @NotNull Position getBlockPos() {
 +        return blockPos;
 +    }
 +
++    @NotNull
 +    private final Position blockPos;
 +
-+    public MobSpawnStructure(Position blockPos) {
++    public MobSpawnStructure(@NotNull Position blockPos) {
 +        this.blockPos = blockPos;
 +    }
 +
++    @Nullable
 +    public String getStructure() {
 +        return structure;
 +    }
 +
-+    public void setStructure(String structure) {
++    public void setStructure(@NotNull String structure) {
 +        this.structure = structure;
 +    }
 +
++    @Nullable
 +    private String structure = null;
 +
 +
