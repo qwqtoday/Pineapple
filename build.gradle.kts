@@ -92,6 +92,12 @@ paperweight {
 }
 
 tasks.generateDevelopmentBundle {
+    atFile = null
+    decompiledJar = null
+    decompilerUrl = null
+    minecraftVersion = null
+    mojangMappedPaperclipFile = null
+
     apiCoordinates = "today.qwq.pineapple:pineapple-api"
     mojangApiCoordinates = "io.papermc.paper:paper-mojangapi"
     libraryRepositories.set(
